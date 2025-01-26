@@ -158,7 +158,8 @@ class FolderStructureManager {
             const gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
             this.ignoreRules.add(gitignoreContent);
         } catch (error) {
-            console.error('Error loading .gitignore:', error);
+            // silently continue if no valid .gitignore
+            // console.error('Error loading .gitignore:', error);
         }
     }
 
