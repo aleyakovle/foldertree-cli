@@ -44,6 +44,11 @@
     "file-organization",
     "project-template"
   ],
+  "homepage": "https://github.com/aleyakovle/foldertree-cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleyakovle/foldertree-cli.git"
+  },
   "author": "Aleksandr Yakovlev",
   "license": "MIT",
   "readme": "README.npm.md",

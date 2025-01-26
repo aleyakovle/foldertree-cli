@@ -13,6 +13,10 @@ Transform tree diagrams into real folders and generate folder structure visualiz
 
 ## Installation
 
+[![npm version](https://img.shields.io/npm/v/foldertree-cli.svg)](https://www.npmjs.com/package/foldertree-cli)
+[![npm downloads](https://img.shields.io/npm/dm/foldertree-cli.svg)](https://www.npmjs.com/package/foldertree-cli)
+[![npm license](https://img.shields.io/npm/l/foldertree-cli.svg)](https://www.npmjs.com/package/foldertree-cli)
+
 ```bash
 npm install -g foldertree-cli
 ```
