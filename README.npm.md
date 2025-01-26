@@ -36,23 +36,28 @@ foldertree-cli generate my-project output.txt
 └── README.md
 ```
 
-## Commands
-### create
+### Usage:
+```
+Usage:
+    foldertree-cli (create-folders|create|c) <input-file> <target-directory>
+    foldertree-cli (generate-file|generate|g) <source-directory> <output-file> [options]
 
-Creates folders and files from a tree diagram:
+Commands:
+    create-folders, create, c    - Create folder structure from input file
+    generate-file, generate, g   - Generate structure text file from existing directory
 
-```bash
-foldertree-cli create <input-file> <target-directory>
+Options:
+    --ignore <gitignore-file>   - Specify a .gitignore file to exclude additional paths
+    --include-hidden            - Include hidden and system folders (like .git, .vscode)
+
+Examples:
+    foldertree-cli create-folders ./structure.txt ./my-project
+    foldertree-cli generate-file ./my-project ./output-structure.txt
+    foldertree-cli generate-file ./my-project ./output-structure.txt --ignore ./.gitignore
+    foldertree-cli generate-file ./my-project ./output-structure.txt --include-hidden
 ```
 
-### generate
-
-Creates a tree diagram from existing folders:
-```bash
-foldertree-cli generate <source-directory> <output-file>
-```
-
-Features
+### Features
 * Validates tree diagram format
 * Handles nested structures
 * Creates empty files automatically

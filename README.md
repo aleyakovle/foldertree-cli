@@ -21,7 +21,6 @@ Transform tree diagrams into real folders and generate folder structure visualiz
 npm install -g foldertree-cli
 ```
 
-## Usage
 ### Creating Folders from Tree Diagram
 
 1. Create a text file (e.g., `structure.txt`) with your desired folder structure:
@@ -50,6 +49,8 @@ Generate a tree diagram from an existing folder
 foldertree-cli generate my-project output.txt
 ```
 
+## ❗To hide system files or to include `.gitignore` rules, [check the section below](#usage-guide).
+
 ### Tree Diagram Format
 
 * Use ├── for items that have siblings below them
@@ -57,3 +58,29 @@ foldertree-cli generate my-project output.txt
 * Use │ for vertical lines
 * Add / at the end of folder names
 * Indent using spaces (4 spaces or 1 tab)
+
+
+## usage-guide
+
+<details> <summary>CLI help</summary>
+
+```
+Usage:
+    foldertree-cli (create-folders|create|c) <input-file> <target-directory>
+    foldertree-cli (generate-file|generate|g) <source-directory> <output-file> [options]
+
+Commands:
+    create-folders, create, c    - Create folder structure from input file
+    generate-file, generate, g   - Generate structure text file from existing directory
+
+Options:
+    --ignore <gitignore-file>   - Specify a .gitignore file to exclude additional paths
+    --include-hidden            - Include hidden and system folders (like .git, .vscode)
+
+Examples:
+    foldertree-cli create-folders ./structure.txt ./my-project
+    foldertree-cli generate-file ./my-project ./output-structure.txt
+    foldertree-cli generate-file ./my-project ./output-structure.txt --ignore ./.gitignore
+    foldertree-cli generate-file ./my-project ./output-structure.txt --include-hidden
+```
+</details>
