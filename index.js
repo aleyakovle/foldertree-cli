@@ -2,6 +2,61 @@
 
 const fs = require('fs');
 const path = require('path');
+const ignore = require('ignore');
+
+const DEFAULT_IGNORED_PATTERNS = [
+    // Version Control
+    '.git/**',
+    '.svn/**',
+    '.hg/**',
+    '.bzr/**',
+
+    // Dependencies
+    'node_modules/**',
+    'bower_components/**',
+    'vendor/**',
+
+    // IDE and Editor files
+    '.idea/**',
+    '.vscode/**',
+    '.vs/**',
+    '*.sublime-*',
+
+    // Build and Cache
+    'dist/**',
+    'build/**',
+    'out/**',
+    '.cache/**',
+    '.tmp/**',
+    '.temp/**',
+
+    // OS files
+    '.DS_Store',
+    'Thumbs.db',
+
+    // Log files
+    '*.log',
+    'logs/**',
+
+    // Coverage reports
+    'coverage/**',
+    '.nyc_output/**',
+
+    // Environment and secrets
+    '.env*',
+    '.env.local',
+    '.env.*.local',
+
+    // Additional common ignores
+    '*.pyc',
+    '__pycache__/**',
+    '.sass-cache/**',
+    '.next/**',
+    '.nuxt/**',
+    '.serverless/**',
+    '.webpack/**',
+    '.parcel-cache/**'
+];
 
 class StructureValidator {
     static VALID_LINE_PATTERNS = {
@@ -87,8 +142,24 @@ class StructureValidator {
 }
 
 class FolderStructureManager {
-    constructor() {
+    constructor(options = {}) {
         this.validator = new StructureValidator();
+        this.ignoreRules = ignore();
+        this.includeHidden = options.includeHidden || false;
+
+        // Always initialize with default ignores unless explicitly included
+        if (!this.includeHidden) {
+            this.ignoreRules.add(DEFAULT_IGNORED_PATTERNS);
+        }
+    }
+
+    loadIgnoreRules(gitignorePath) {
+        try {
+            const gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
+            this.ignoreRules.add(gitignoreContent);
+        } catch (error) {
+            console.error('Error loading .gitignore:', error);
+        }
     }
 
     // Creates actual folders and files from structure file
@@ -175,10 +246,20 @@ class FolderStructureManager {
 
         items.forEach(item => {
             const fullPath = path.join(directory, item);
+            const itemRelativePath = path.join(relativePath, item);
+
+            // Skip if item matches ignore rules
+            if (this.ignoreRules.ignores(itemRelativePath)) {
+                return;
+            }
+
             const stat = fs.statSync(fullPath);
 
             if (stat.isDirectory()) {
-                structure[item + '/'] = this.scanDirectory(fullPath, path.join(relativePath, item));
+                const subStructure = this.scanDirectory(fullPath, itemRelativePath);
+                if (Object.keys(subStructure).length > 0) {
+                    structure[item + '/'] = subStructure;
+                }
             } else {
                 structure[item] = null;
             }
@@ -212,28 +293,47 @@ function showHelp() {
     console.log(`
 Usage:
     foldertree-cli (create-folders|create|c) <input-file> <target-directory>
-    foldertree-cli (generate-file|generate|g) <source-directory> <output-file>
+    foldertree-cli (generate-file|generate|g) <source-directory> <output-file> [options]
 
 Commands:
     create-folders, create, c    - Create folder structure from input file
-    generate-file, generate, g  - Generate structure text file from existing directory
+    generate-file, generate, g   - Generate structure text file from existing directory
+
+Options:
+    --ignore <gitignore-file>   - Specify a .gitignore file to exclude additional paths
+    --include-hidden            - Include hidden and system folders (like .git, .vscode)
 
 Examples:
     foldertree-cli create-folders ./structure.txt ./my-project
     foldertree-cli generate-file ./my-project ./output-structure.txt
+    foldertree-cli generate-file ./my-project ./output-structure.txt --ignore ./.gitignore
+    foldertree-cli generate-file ./my-project ./output-structure.txt --include-hidden
     `);
 }
 
 if (require.main === module) {
     const args = process.argv.slice(2);
 
-    if (args.length !== 3) {
+    if (args.length < 3) {
         showHelp();
         process.exit(1);
     }
 
-    const [command, arg1, arg2] = args;
-    const manager = new FolderStructureManager();
+    const command = args[0];
+    const arg1 = args[1];
+    const arg2 = args[2];
+
+    // Parse options
+    const ignoreIndex = args.indexOf('--ignore');
+    const gitignorePath = ignoreIndex !== -1 ? args[ignoreIndex + 1] : null;
+    const includeHidden = args.includes('--include-hidden');
+
+    const manager = new FolderStructureManager({ includeHidden });
+
+    // Load additional ignore rules from .gitignore if provided
+    if (gitignorePath) {
+        manager.loadIgnoreRules(path.resolve(gitignorePath));
+    }
 
     try {
         switch (command) {
