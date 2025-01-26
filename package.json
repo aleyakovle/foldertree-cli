@@ -1,0 +1,53 @@
+{
+  "name": "foldertree-cli",
+  "version": "1.0.0",
+  "description": "Create and visualize folder structures using tree diagrams from the command line",
+  "main": "index.js",
+  "bin": {
+    "foldertree-cli": "./index.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "keywords": [
+    "folder-structure",
+    "directory-tree",
+    "tree-diagram",
+    "file-tree",
+    "folder-generator",
+    "directory-structure",
+    "cli",
+    "command-line",
+    "filesystem",
+    "project-structure",
+    "tree-visualization",
+    "folder-template",
+    "directory-mapper",
+    "tree-generator",
+    "project-scaffold",
+    "folder-map",
+    "directory-layout",
+    "tree-maker",
+    "file-organization",
+    "project-template"
+  ],
+  "author": "Aleksandr Yakovlev",
+  "license": "MIT",
+  "readme": "README.npm.md",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
