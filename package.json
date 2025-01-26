@@ -54,5 +54,8 @@
   "readme": "README.npm.md",
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "ignore": "^7.0.3"
   }
 }
